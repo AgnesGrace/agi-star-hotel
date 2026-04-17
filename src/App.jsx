@@ -1,27 +1,35 @@
-import styled from "styled-components";
-import GlobalStyles from "./styles/GlobalStyles";
-import Button from "./ui/Button";
-import Input from "./ui/Input";
-import Heading from "./ui/Heading";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 
-const AppDiv = styled.div`
-  width: 90%;
-  height: 100vh;
-  margin: 2rem auto;
-`;
+import Dashboard from "./pages/Dashboard";
+import Rooms from "./pages/Rooms";
+import Login from "./pages/Login";
+import Bookings from "./pages/Bookings";
+import Users from "./pages/Users";
+import Settings from "./pages/Settings";
+import PageNotFound from "./pages/PageNotFound";
+import GlobalStyles from "./styles/GlobalStyles";
+import AppLayout from "./ui/AppLayout";
+import Account from "./pages/Account";
 
 export default function App() {
   return (
     <>
       <GlobalStyles />
-      <AppDiv>
-        <Heading as="h1">AgiStar Hotel</Heading>
-        <Heading as="h4">I am H4</Heading>
-        <Button buttonSize="small" buttonVariation="primary">
-          Sign In
-        </Button>
-        <Input type="number" placeholder="Number of guests" />
-      </AppDiv>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<AppLayout />}>
+            <Route index element={<Navigate replace to="dashboard" />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="login" element={<Login />} />
+            <Route path="users" element={<Users />} />
+            <Route path="rooms" element={<Rooms />} />
+            <Route path="bookings" element={<Bookings />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="account" element={<Account />} />
+            <Route path="*" element={<PageNotFound />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
