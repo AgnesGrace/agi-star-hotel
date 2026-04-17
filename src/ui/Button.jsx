@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-const buttonSizes = {
+const buttonSize = {
   small: css`
     font-size: 1.2rem;
     padding: 0.4rem 0.8rem;
@@ -20,7 +20,7 @@ const buttonSizes = {
   `,
 };
 
-const buttonVariations = {
+const buttonVariation = {
   primary: css`
     color: var(--color-primary-50);
     background-color: var(--color-primary-600);
@@ -49,20 +49,13 @@ const buttonVariations = {
 };
 
 const Button = styled.button`
-  font-size: 1.2rem;
-  font-weight: 600;
   border: none;
   border-radius: var(--border-radius-sm);
-  padding: 1.2rem 1.4rem;
-  margin-right: 1rem;
-  background-color: var(--color-primary-800);
-  color: var(--color-primary-50);
   box-shadow: var(--shadow-sm);
   cursor: pointer;
 
-  &:hover {
-    background-color: var(--color-primary-900);
-  }
+  ${(props) => buttonSize[props.buttonSize]}
+  ${(props) => buttonVariation[props.buttonVariation]}
 `;
 
 export default Button;
