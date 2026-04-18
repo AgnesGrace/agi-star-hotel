@@ -1,10 +1,12 @@
+import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
+import { getRooms } from "../../services/apirooms";
 
 const Table = styled.div`
-  border: 1px solid var(--color-grey-200);
-
   font-size: 1.4rem;
   background-color: var(--color-grey-0);
+
+  border: 1px solid var(--color-grey-200);
   border-radius: 7px;
   overflow: hidden;
 `;
@@ -23,3 +25,12 @@ const TableHeader = styled.header`
   color: var(--color-grey-600);
   padding: 1.6rem 2.4rem;
 `;
+
+export default function RoomTable() {
+  const roomsData = useQuery({
+    queryKey: ["rooms"],
+    queryFn: getRooms,
+  });
+
+  return <div>rooms</div>;
+}
