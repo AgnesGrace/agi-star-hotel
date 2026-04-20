@@ -6,6 +6,11 @@ import styled from "styled-components";
 const Main = styled.main`
   padding: 4rem 4.8rem;
   background-color: var(--color-grey-50);
+  overflow: scroll;
+`;
+const MainContainer = styled.div`
+  max-width: 120rem;
+  margin: 0 auto;
 `;
 
 const StyledAppLayout = styled.div`
@@ -20,7 +25,9 @@ export default function AppLayout() {
       <Header />
       <Sidebar />
       <Main>
-        <Outlet />
+        <MainContainer>
+          <Outlet />
+        </MainContainer>
       </Main>
     </StyledAppLayout>
   );

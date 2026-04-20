@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-const buttonSize = {
+const size = {
   small: css`
     font-size: 1.2rem;
     padding: 0.4rem 0.8rem;
@@ -20,7 +20,7 @@ const buttonSize = {
   `,
 };
 
-const buttonVariation = {
+const variation = {
   primary: css`
     color: var(--color-primary-50);
     background-color: var(--color-primary-600);
@@ -54,8 +54,8 @@ const Button = styled.button`
   box-shadow: var(--shadow-sm);
   cursor: pointer;
 
-  ${(props) => buttonSize[props.buttonSize]}
-  ${(props) => buttonVariation[props.buttonVariation]}
+  ${(props) => size[props.size]}
+  ${(props) => variation[props.variation]}
 `;
 
 export default Button;
