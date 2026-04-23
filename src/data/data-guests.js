@@ -9,7 +9,6 @@ export const guests = [
 
     gender: "male",
     address: "London",
-    city: "London",
     emergencyContact: "+447900000000",
 
     vip: false,

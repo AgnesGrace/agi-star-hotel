@@ -1,9 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
-import { getRooms } from "../../services/apirooms";
 
 import Spinner from "../../ui/Spinner";
 import RoomRow from "./RoomRow";
+import useRooms from "./hooks/useRooms";
 
 const Table = styled.div`
   width: 100%;
@@ -33,16 +32,7 @@ const TableHeader = styled.header`
 `;
 
 export default function RoomTable() {
-  /* Using the React Query to get all the rooms   */
-
-  const {
-    isLoading,
-    data: roomsData,
-    error,
-  } = useQuery({
-    queryKey: ["rooms"],
-    queryFn: getRooms,
-  });
+  const { isLoading, roomsData } = useRooms();
 
   if (isLoading) return <Spinner />;
   return (

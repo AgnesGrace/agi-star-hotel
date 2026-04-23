@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { MdDelete, MdEdit } from "react-icons/md";
+import { IoDuplicate } from "react-icons/io5";
 
 const TableRow = styled.div`
   display: grid;
@@ -89,10 +90,12 @@ import { deleteRoom } from "../../services/apirooms";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import CreateRoomForm from "./CreateRoomForm";
+import Spinner from "../../ui/Spinner";
+import useAddRoom from "./hooks/useAddRoom";
 
 export default function RoomRow({ room }) {
   const queryClient = useQueryClient();
-
+  const { addRoomMutate, isAddingRoom } = useAddRoom();
   const [showForm, setShowForm] = useState(false);
 
   const {
@@ -104,6 +107,7 @@ export default function RoomRow({ room }) {
     regularPrice,
     discount,
     description,
+    image,
   } = room;
 
   const handleDeleteRoom = useMutation({
@@ -115,9 +119,20 @@ export default function RoomRow({ room }) {
     onError: (err) => toast.error(err.message),
   });
 
+  function handleDuplicateRoom() {
+    addRoomMutate({
+      roomType: `${roomType} Copied ${roomNumber}`,
+      roomNumber,
+      floor,
+      maxcapacity: capacity,
+      regularPrice,
+      discount,
+      description,
+      image,
+    });
+  }
   return (
     <>
-      {" "}
       <TableRow role="row">
         <Room>{String(roomNumber).padStart(3, "0")}</Room>
         <div>{roomType}</div>
@@ -131,10 +146,19 @@ export default function RoomRow({ room }) {
         </TooltipWrapper>
         <StyledIconContainer>
           <MdDelete onClick={() => handleDeleteRoom.mutate(id)} />
-          <MdEdit onClick={() => setShowForm((prev) => !prev)} />
+          <MdEdit
+            onClick={() => setShowForm((prev) => !prev)}
+            style={{ color: "var(--color-primary-900)" }}
+          />
+          <IoDuplicate
+            style={{ color: "var(--color-primary-900)" }}
+            onClick={handleDuplicateRoom}
+            disable={isAddingRoom}
+          />
         </StyledIconContainer>
       </TableRow>
-      {showForm && <CreateRoomForm />}
+      {handleDeleteRoom.isPending && <Spinner fullScreen />}
+      {showForm && <CreateRoomForm clickedRoom={room} />}
     </>
   );
 }

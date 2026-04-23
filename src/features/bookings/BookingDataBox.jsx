@@ -21,7 +21,7 @@ const StyledBookingDataBox = styled.section`
 `;
 
 const Header = styled.header`
-  background-color: var(--color-brand-500);
+  background-color: var(--color-primary-500);
   padding: 2rem 4rem;
   color: #e0e7ff;
   font-size: 1.8rem;
