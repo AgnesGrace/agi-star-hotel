@@ -23,7 +23,7 @@ const Error = styled.span`
   color: var(--color-red-700);
 `;
 
-function CreateRoomForm({ clickedRoom = {} }) {
+function CreateRoomForm({ clickedRoom = {}, onCloseModal }) {
   const isEditingSession = Boolean(clickedRoom.id);
 
   const { register, handleSubmit, reset, getValues, formState } = useForm({
@@ -53,13 +53,15 @@ function CreateRoomForm({ clickedRoom = {} }) {
     const imagePath =
       typeof data.image === "string" ? data.image : data.image[0];
     if (isEditingSession) {
-      console.log("edit");
-      editRoomMutate({
-        newRoomData: { ...data, image: imagePath },
-        id: clickedRoom.id,
-      });
+      editRoomMutate(
+        {
+          newRoomData: { ...data, image: imagePath },
+          id: clickedRoom.id,
+        },
+        onCloseModal(),
+      );
     } else {
-      addRoomMutate({ ...data, image: imagePath });
+      addRoomMutate({ ...data, image: imagePath }, onCloseModal());
     }
   }
 
@@ -68,12 +70,14 @@ function CreateRoomForm({ clickedRoom = {} }) {
   }
 
   const isFormWorking = isAddingRoom || isEditingRoom;
-  console.log(isAddingRoom, "isadd");
 
   return (
     <>
-      <Form onSubmit={handleSubmit(onSubmitForm, onError)}>
-        <Heading as="h2">Add a Room</Heading>
+      <Form
+        onSubmit={handleSubmit(onSubmitForm, onError)}
+        type={onCloseModal ? "modal" : "normal"}
+      >
+        <Heading as="h2">{isEditingSession ? "Edit Room" : "Add Room"}</Heading>
         <FormRow>
           <Label htmlFor="roomNumber">Room Number</Label>
           <Input
@@ -228,14 +232,18 @@ function CreateRoomForm({ clickedRoom = {} }) {
         </FormRow>
 
         <FormRow>
-          <Button variation="secondary" type="reset" size="small">
+          <Button
+            variation="secondary"
+            type="reset"
+            size="small"
+            onClick={onCloseModal}
+          >
             Cancel
           </Button>
           <Button variation="primary" size="small">
-            {!isEditingRoom ? "Add Room" : "Edit Room"}
+            {!isEditingSession ? "Add Room" : "Edit Room"}
           </Button>
         </FormRow>
-        {isAddingRoom && <Spinner fullScreen />}
       </Form>
     </>
   );

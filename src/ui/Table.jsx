@@ -1,4 +1,6 @@
+import { createContext, useContext } from "react";
 import styled from "styled-components";
+import { PiEmptyBold } from "react-icons/pi";
 
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);
@@ -46,15 +48,61 @@ const Footer = styled.footer`
   justify-content: center;
   padding: 1.2rem;
 
-  /* This will hide the footer when it contains no child elements. Possible thanks to the parent selector :has 🎉 */
   &:not(:has(*)) {
     display: none;
   }
 `;
 
-const Empty = styled.p`
+const EmptyRoom = styled.p`
   font-size: 1.6rem;
-  font-weight: 500;
+  font-weight: 600;
+  color: var(--color-red-800);
   text-align: center;
   margin: 2.4rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
 `;
+
+const TableContext = createContext();
+export default function Table({ columns, children }) {
+  return (
+    <TableContext.Provider value={{ columns }}>
+      <StyledTable role="table">{children}</StyledTable>
+    </TableContext.Provider>
+  );
+}
+
+function Header({ children }) {
+  const { columns } = useContext(TableContext);
+  return (
+    <StyledHeader columns={columns} role="row">
+      {children}
+    </StyledHeader>
+  );
+}
+function Row({ children }) {
+  const { columns } = useContext(TableContext);
+  return (
+    <StyledRow role="row" columns={columns}>
+      {children}
+    </StyledRow>
+  );
+}
+function Body({ data, render }) {
+  if (!data.length)
+    return (
+      <EmptyRoom>
+        <PiEmptyBold />
+        <span>There are no available rooms.</span>
+      </EmptyRoom>
+    );
+  return <StyledBody>{data.map(render)}</StyledBody>;
+}
+
+Table.Header = Header;
+Table.Row = Row;
+Table.Body = Body;
+Table.Footer = Footer;

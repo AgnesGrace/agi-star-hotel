@@ -1,18 +1,17 @@
 import styled from "styled-components";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { IoDuplicate } from "react-icons/io5";
-
-const TableRow = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1.2fr 1fr 1fr 1fr 1fr 2fr 0.4fr;
-  column-gap: 2.4rem;
-  align-items: center;
-  padding: 1.4rem 2.4rem;
-
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);
-  }
-`;
+import Table from "../../ui/Table";
+import { formatCurrency, stringSlicer } from "../../utils/helpers";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteRoom } from "../../services/apirooms";
+import toast from "react-hot-toast";
+import CreateRoomForm from "./CreateRoomForm";
+import Spinner from "../../ui/Spinner";
+import useAddRoom from "./hooks/useAddRoom";
+import Modal from "../../ui/Modal";
+import ConfirmDelete from "../../ui/ConfirmDelete";
+import Menus from "../../ui/Menus";
 
 const Room = styled.div`
   font-size: 1.6rem;
@@ -83,21 +82,13 @@ const TooltipText = styled.div`
     pointer-events: auto;
   }
 `;
-
-import { formatCurrency, stringSlicer } from "../../utils/helpers";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteRoom } from "../../services/apirooms";
-import toast from "react-hot-toast";
-import { useState } from "react";
-import CreateRoomForm from "./CreateRoomForm";
-import Spinner from "../../ui/Spinner";
-import useAddRoom from "./hooks/useAddRoom";
+const FormWrapper = styled.div`
+  height: 50rem;
+`;
 
 export default function RoomRow({ room }) {
   const queryClient = useQueryClient();
   const { addRoomMutate, isAddingRoom } = useAddRoom();
-  const [showForm, setShowForm] = useState(false);
-
   const {
     id,
     roomNumber,
@@ -133,32 +124,65 @@ export default function RoomRow({ room }) {
   }
   return (
     <>
-      <TableRow role="row">
+      <Table.Row>
         <Room>{String(roomNumber).padStart(3, "0")}</Room>
         <div>{roomType}</div>
         <div>{floor}</div>
         <div>{capacity}</div>
         <Price>{formatCurrency(regularPrice)}</Price>
-        <Discount>{formatCurrency(discount)}</Discount>
+        <Discount>{discount ? formatCurrency(discount) : "---"}</Discount>
         <TooltipWrapper>
           {stringSlicer(description, 25)}
           <TooltipText>{description}</TooltipText>
         </TooltipWrapper>
         <StyledIconContainer>
-          <MdDelete onClick={() => handleDeleteRoom.mutate(id)} />
-          <MdEdit
-            onClick={() => setShowForm((prev) => !prev)}
-            style={{ color: "var(--color-primary-900)" }}
-          />
-          <IoDuplicate
-            style={{ color: "var(--color-primary-900)" }}
-            onClick={handleDuplicateRoom}
-            disable={isAddingRoom}
-          />
+          <Modal>
+            <Menus.Menu>
+              <Menus.Toggle id={id} />
+              <Menus.List id={id}>
+                <Modal.Open windowToOpen="edit">
+                  <Menus.Button
+                    icon={
+                      <MdEdit style={{ color: "var(--color-primary-900)" }} />
+                    }
+                  >
+                    Edit
+                  </Menus.Button>
+                </Modal.Open>
+                <Menus.Button
+                  icon={
+                    <IoDuplicate
+                      style={{ color: "var(--color-primary-900)" }}
+                      onClick={handleDuplicateRoom}
+                    />
+                  }
+                >
+                  Duplicate
+                </Menus.Button>
+                <Modal.Open windowToOpen="delete">
+                  <Menus.Button
+                    icon={
+                      <MdDelete style={{ color: "var(--color-red-900)" }} />
+                    }
+                  >
+                    Delete
+                  </Menus.Button>
+                </Modal.Open>
+              </Menus.List>
+              <Modal.Window name="delete">
+                <ConfirmDelete
+                  resourceName="Room"
+                  disabled={handleDeleteRoom.isPending}
+                  onConfirm={() => handleDeleteRoom.mutate(id)}
+                />
+              </Modal.Window>
+              <Modal.Window name="edit">
+                <CreateRoomForm clickedRoom={room} />
+              </Modal.Window>
+            </Menus.Menu>
+          </Modal>
         </StyledIconContainer>
-      </TableRow>
-      {handleDeleteRoom.isPending && <Spinner fullScreen />}
-      {showForm && <CreateRoomForm clickedRoom={room} />}
+      </Table.Row>
     </>
   );
 }

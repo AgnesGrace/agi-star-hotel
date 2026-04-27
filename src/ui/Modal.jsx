@@ -1,4 +1,8 @@
 import styled from "styled-components";
+import { IoCloseSharp } from "react-icons/io5";
+import { createPortal } from "react-dom";
+import { cloneElement, createContext, useContext, useState } from "react";
+import useCloseModalOuter from "../hooks/useCloseModalOuter";
 
 const StyledModal = styled.div`
   position: fixed;
@@ -48,3 +52,61 @@ const Button = styled.button`
     color: var(--color-grey-500);
   }
 `;
+
+/*export default function Modal({ onCloseModal, children }) {
+  return createPortal(
+    <Overlay>
+      <StyledModal>
+        <Button onClick={onCloseModal}>
+          <IoCloseSharp />
+        </Button>
+        <div>{children}</div>
+      </StyledModal>
+    </Overlay>,
+    document.body,
+  );
+} */
+
+const ModalContext = createContext();
+
+export default function Modal({ children }) {
+  const [openName, setOpenName] = useState("");
+
+  function handleClose() {
+    setOpenName("");
+  }
+  const openModal = setOpenName;
+
+  return (
+    <ModalContext.Provider value={{ openName, handleClose, openModal }}>
+      {children}
+    </ModalContext.Provider>
+  );
+}
+
+function Open({ windowToOpen, children }) {
+  const { openModal } = useContext(ModalContext);
+
+  return cloneElement(children, { onClick: () => openModal(windowToOpen) });
+}
+
+function Window({ name, children }) {
+  const { openName, handleClose } = useContext(ModalContext);
+  const ref = useCloseModalOuter(handleClose);
+
+  if (name !== openName) return null;
+  return createPortal(
+    <Overlay>
+      <StyledModal ref={ref}>
+        <Button onClick={handleClose}>
+          <IoCloseSharp />
+        </Button>
+        <div>{cloneElement(children, { onCloseModal: handleClose })}</div>
+      </StyledModal>
+    </Overlay>,
+    document.body,
+  );
+}
+
+Modal.Open = Open;
+Modal.Window = Window;

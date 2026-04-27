@@ -30,7 +30,7 @@ const FullScreenWrapper = styled.div`
 
   backdrop-filter: blur(6px);
   background: rgba(255, 255, 255, 0.2);
-  z-index: 9999;
+  z-index: 99999;
 `;
 
 function Spinner({ fullScreen = false }) {

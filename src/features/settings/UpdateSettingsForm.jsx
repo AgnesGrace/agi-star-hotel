@@ -1,4 +1,3 @@
-import { useForm } from "react-hook-form";
 import styled from "styled-components";
 
 import Form from "../../ui/Form";
@@ -7,9 +6,6 @@ import { FormRow } from "../../ui/FormRow";
 import Row from "../../ui/Row";
 import useSettings from "./hooks/useSettings";
 import Spinner from "../../ui/Spinner";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateSetting } from "../../services/apiSettings";
-import toast from "react-hot-toast";
 import Button from "../../ui/Button";
 import useUpdateSettings from "./hooks/useUpdateSettings";
 
@@ -33,7 +29,6 @@ function UpdateSettingsForm() {
   function handleUpdateSettings(event, fieldName) {
     const fieldValue = event.target.value;
     if (!fieldValue) return;
-    console.log(fieldValue);
     updateSettingsMutate({ [fieldName]: fieldValue });
   }
 
@@ -58,7 +53,6 @@ function UpdateSettingsForm() {
             id="maxBookingLength"
             defaultValue={maxBookingLength}
             onBlur={(event) => handleUpdateSettings(event, "maxBookingLength")}
-            disabled={isPending}
           />
         </FormRow>
       </Row>
@@ -70,7 +64,6 @@ function UpdateSettingsForm() {
             id="maxNumberOfGuests"
             defaultValue={maxNumberOfGuests}
             onBlur={(event) => handleUpdateSettings(event, "maxNumberOfGuests")}
-            disabled={isPending}
           />
         </FormRow>
         <FormRow>
@@ -80,7 +73,6 @@ function UpdateSettingsForm() {
             id="minRoom"
             defaultValue={minRoom}
             onBlur={(event) => handleUpdateSettings(event, "minRoom")}
-            disabled={isPending}
           />
         </FormRow>
       </Row>
@@ -92,7 +84,6 @@ function UpdateSettingsForm() {
             id="minPrice"
             defaultValue={minPrice}
             onBlur={(event) => handleUpdateSettings(event, "minPrice")}
-            disabled={isPending}
           />
         </FormRow>
         <FormRow>
@@ -102,7 +93,6 @@ function UpdateSettingsForm() {
             id="mealPrice"
             defaultValue={mealPrice}
             onBlur={(event) => handleUpdateSettings(event, "mealPrice")}
-            disabled={isPending}
           />
         </FormRow>
       </Row>
