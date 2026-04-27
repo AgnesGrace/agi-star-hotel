@@ -1,16 +1,53 @@
-# Welcome to AgiStar Hotel repo
+# 🏨 AgiStar Hotel App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome!!!
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🛠️ Tech Stack
 
-## React Compiler
+- React (Vite)
+- Styled Components
+- TanStack Query
+- React Router
+- React Hook Form
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Supabase
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 Highlights
+
+- 🔄 **TanStack Query** (Server state + caching)
+- ⚛️ **Compound Component Pattern** (Flexible, reusable UI)
+- 🧠 **Custom Hooks** (Encapsulated logic)
+- 🔗 **URL State Management** (`useSearchParams`)
+- 🧩 **Reusable Component System**
+- 🎯 **Real-world UI/UX patterns** (menus, filters, modals)
+
+---
+
+## 🎯 What This Project Shows
+
+- Scalable React structure
+- Clean state management (UI + server)
+- Advanced component design patterns
+- Production-style frontend practices
+
+## 🧱 Architecture
+
+```bash
+src/
+├── ui/   # Reusable UI
+├── features/     # Feature-based modules
+├── hooks/        # Custom hooks & React Query logic
+├── services/     # API
+└── pages/
+```
+
+### Getting Started
+
+```bash
+npm install
+npm run dev
+```
