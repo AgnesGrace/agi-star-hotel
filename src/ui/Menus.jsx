@@ -84,6 +84,7 @@ function Toggle({ id }) {
   const { closeMenu, openMenu, openId, setPosition } = useContext(MenusContext);
 
   function handleClick(e) {
+    e.stopPropagation();
     const rect = e.target.closest("button").getBoundingClientRect();
     openId === "" || openId !== id ? openMenu(id) : closeMenu();
 
@@ -125,7 +126,8 @@ function List({ id, children }) {
 function Button({ children, icon, onClick }) {
   const { closeMenu } = useContext(MenusContext);
 
-  function handleClick() {
+  function handleClick(e) {
+    e.stopPropagation();
     onClick?.();
     closeMenu();
   }

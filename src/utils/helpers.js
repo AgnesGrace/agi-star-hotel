@@ -10,6 +10,11 @@ export const formatDistanceFromNow = (dateStr) =>
     .replace("about ", "")
     .replace("in", "In");
 
+export const formatCurrency = (value) =>
+  new Intl.NumberFormat("en", { style: "currency", currency: "EUR" }).format(
+    value,
+  );
+
 export const getToday = function (options = {}) {
   const today = new Date();
 
@@ -18,12 +23,32 @@ export const getToday = function (options = {}) {
   return today.toISOString();
 };
 
-export const formatCurrency = (value) =>
-  new Intl.NumberFormat("en", { style: "currency", currency: "USD" }).format(
-    value,
-  );
-
 export const stringSlicer = (str, num = 15) => {
   if (str === null || str?.length < 15) return str;
   return str.slice(0, num) + "...";
+};
+
+export const fromatDateWithSuffix = (dateString) => {
+  const date = new Date(dateString);
+  const day = date.getDate();
+  const year = date.getFullYear();
+  const month = date.toLocaleString("en-US", {
+    month: "long",
+  });
+
+  function getSuffix(day) {
+    if (day >= 11 && day <= 13) return "th";
+    switch (day % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  }
+
+  return `${month} ${day}${getSuffix(day)}, ${year}`;
 };

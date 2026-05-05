@@ -128,11 +128,11 @@ export default function RoomRow({ room }) {
         <Room>{String(roomNumber).padStart(3, "0")}</Room>
         <div>{roomType}</div>
         <div>{floor}</div>
-        <div>{capacity}</div>
+
         <Price>{formatCurrency(regularPrice)}</Price>
         <Discount>{discount ? formatCurrency(discount) : "---"}</Discount>
         <TooltipWrapper>
-          {stringSlicer(description, 25)}
+          {stringSlicer(description, 15)}
           <TooltipText>{description}</TooltipText>
         </TooltipWrapper>
         <StyledIconContainer>
@@ -153,9 +153,9 @@ export default function RoomRow({ room }) {
                   icon={
                     <IoDuplicate
                       style={{ color: "var(--color-primary-900)" }}
-                      onClick={handleDuplicateRoom}
                     />
                   }
+                  onClick={handleDuplicateRoom}
                 >
                   Duplicate
                 </Menus.Button>

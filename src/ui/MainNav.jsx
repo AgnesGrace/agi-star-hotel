@@ -4,6 +4,7 @@ import { IoMdHome } from "react-icons/io";
 import { MdBedroomParent, MdAccountCircle } from "react-icons/md";
 import { IoIosSettings } from "react-icons/io";
 import { FaBookmark, FaUsers } from "react-icons/fa";
+import { FaPersonShelter } from "react-icons/fa6";
 
 const NavList = styled.ul`
   display: flex;
@@ -49,45 +50,45 @@ const StyledNavLink = styled(NavLink)`
   }
 `;
 
-export default function MainNav() {
+export default function MainNav({ onClose }) {
   return (
     <nav>
       <NavList>
-        <li>
+        <li onClick={onClose}>
           <StyledNavLink to="/dashboard">
-            {" "}
             <IoMdHome />
             <span>Home</span>
           </StyledNavLink>
         </li>
-        <li>
+        <li onClick={onClose}>
           <StyledNavLink to="/rooms">
             <MdBedroomParent />
             <span>Rooms</span>
           </StyledNavLink>
         </li>
-        <li>
-          <StyledNavLink to="/users">
-            <FaUsers />
-            <span>Users</span>
-          </StyledNavLink>
-        </li>
-        <li>
+
+        <li onClick={onClose}>
           <StyledNavLink to="/bookings">
             <FaBookmark />
             <span>Bookings</span>
           </StyledNavLink>
         </li>
-        <li>
+        <li onClick={onClose}>
           <StyledNavLink to="/account">
             <MdAccountCircle />
             <span>Account</span>
           </StyledNavLink>
         </li>
-        <li>
+        <li onClick={onClose}>
           <StyledNavLink to="/settings">
             <IoIosSettings />
             <span>Settings</span>
+          </StyledNavLink>
+        </li>
+        <li onClick={onClose}>
+          <StyledNavLink to="/personal-corner">
+            <FaPersonShelter />
+            <span>My Corner</span>
           </StyledNavLink>
         </li>
       </NavList>

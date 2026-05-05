@@ -16,6 +16,5 @@ export default function useAddRoom() {
     },
     onError: (err) => toast.error(err.message),
   });
-  console.log(isAddingRoom);
   return { addRoomMutate, isAddingRoom };
 }

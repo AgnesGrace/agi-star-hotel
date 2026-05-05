@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 import styled from "styled-components";
 import { PiEmptyBold } from "react-icons/pi";
+import { BsFillEyeFill } from "react-icons/bs";
 
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);

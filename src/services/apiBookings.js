@@ -1,24 +1,48 @@
 import { getToday } from "../utils/helpers";
 import supabase from "./supabase";
+import { PAGESIZE } from "../utils/constants";
 
 export async function getBooking(id) {
   const { data, error } = await supabase
     .from("bookings")
-    .select("*, roomss(*), guests(*)")
+    .select("*, rooms(*), guests(*)")
     .eq("id", id)
     .single();
 
   if (error) {
-    throw new Error("Booking not found");
+    throw new Error("Ooops! Booking not found");
   }
 
   return data;
 }
 
+export async function getBookings({ filter, currentPage }) {
+  let query = supabase
+    .from("bookings")
+    .select(
+      "*, rooms(roomType, roomNumber ), guests(surname, firstName, middleName, email)",
+      { count: "exact" },
+    );
+  if (filter !== null) query = query.eq(filter.field, filter.value);
+
+  if (currentPage) {
+    const start = (currentPage - 1) * PAGESIZE;
+    const end = start + PAGESIZE - 1;
+    query = query.range(start, end);
+  }
+
+  const { data, error, count } = await query;
+
+  if (error) {
+    throw new Error("Ooops! Bookings not found");
+  }
+  return { data, count };
+}
+
 export async function getBookingsAfterDate(date) {
   const { data, error } = await supabase
     .from("bookings")
-    .select("created_at, totalPrice, extrasPrice")
+    .select("created_at, totalPrice, bookingExtrasPrice, status")
     .gte("created_at", date)
     .lte("created_at", getToday({ end: true }));
 
@@ -32,8 +56,7 @@ export async function getBookingsAfterDate(date) {
 export async function getStaysAfterDate(date) {
   const { data, error } = await supabase
     .from("bookings")
-    // .select('*')
-    .select("*, guests(fullName)")
+    .select("*")
     .gte("startDate", date)
     .lte("startDate", getToday());
 
@@ -47,9 +70,9 @@ export async function getStaysAfterDate(date) {
 export async function getStaysTodayActivity() {
   const { data, error } = await supabase
     .from("bookings")
-    .select("*, guests(fullName, nationality, countryFlag)")
+    .select("*, guests(lastName, nationality, countryFlag)")
     .or(
-      `and(status.eq.unconfirmed,startDate.eq.${getToday()}),and(status.eq.checked-in,endDate.eq.${getToday()})`,
+      `and(status.eq.unconfirmed,startDate.eq.${getToday()}),and(status.eq.confirmed,endDate.eq.${getToday()})`,
     )
     .order("created_at");
 

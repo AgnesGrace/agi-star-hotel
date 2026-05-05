@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Heading from "../ui/Heading";
-import { IoIosCloud } from "react-icons/io";
+import { MdBedroomChild } from "react-icons/md";
 
 const EmptyContainer = styled.div`
   display: flex;
@@ -9,16 +9,16 @@ const EmptyContainer = styled.div`
   align-items: center;
   height: 100%;
 `;
-function Account() {
+function PersonalCorner() {
   return (
     <>
-      <Heading as="h1">Your account Center</Heading>
+      <Heading as="h1">Your Personal Area</Heading>
       <EmptyContainer>
-        <IoIosCloud size={40} />
+        <MdBedroomChild size={40} />
         <p>Check back later</p>
       </EmptyContainer>
     </>
   );
 }
 
-export default Account;
+export default PersonalCorner;

@@ -11,7 +11,7 @@ const ButtonText = styled.button`
 
   &:hover,
   &:active {
-    color: var(--color-primary-700);
+    color: var(--color-primary-900);
   }
 `;
 

@@ -19,7 +19,7 @@ async function deleterooms() {
 }
 
 async function deleteBookings() {
-  const { error } = await supabase.from("bookings").delete().gt("id", 0);
+  const { error } = await supabase.from("bookings").delete().neq("id", 0);
   if (error) console.log(error.message);
 }
 
@@ -51,10 +51,10 @@ async function createBookings() {
     const room = rooms.at(booking.roomId - 1);
     const numNights = subtractDates(booking.endDate, booking.startDate);
     const roomPrice = numNights * (room.regularPrice - room.discount);
-    const extrasPrice = booking.hasBreakfast
+    const bookingExtrasPrice = booking.hasBreakfast
       ? numNights * 15 * booking.numGuests
-      : 0; // hardcoded breakfast price
-    const totalPrice = roomPrice + extrasPrice;
+      : 0;
+    const totalPrice = roomPrice + bookingExtrasPrice;
 
     let status;
     if (
@@ -73,13 +73,13 @@ async function createBookings() {
       isPast(new Date(booking.startDate)) &&
       !isToday(new Date(booking.startDate))
     )
-      status = "checked-in";
+      status = "confirmed";
 
     return {
       ...booking,
       numNights,
       roomPrice,
-      extrasPrice,
+      bookingExtrasPrice,
       totalPrice,
       guestId: allGuestIds.at(booking.guestId - 1),
       roomId: allRoomIds.at(booking.roomId - 1),

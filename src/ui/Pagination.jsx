@@ -1,4 +1,7 @@
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
+import { useSearchParams } from "react-router";
 import styled from "styled-components";
+import { PAGESIZE } from "../utils/constants";
 
 const StyledPagination = styled.div`
   width: 100%;
@@ -19,6 +22,11 @@ const P = styled.p`
 const Buttons = styled.div`
   display: flex;
   gap: 0.6rem;
+`;
+const StyledParagraph = styled.p`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 `;
 
 const PaginationButton = styled.button`
@@ -55,3 +63,48 @@ const PaginationButton = styled.button`
     color: var(--color-primary-50);
   }
 `;
+
+export default function Pagination({ numResults }) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = searchParams.get("page");
+  const currentPage = !page ? 1 : Number(page);
+
+  const numberOfPages = Math.ceil(numResults / PAGESIZE);
+
+  function handleNext() {
+    const nextPage =
+      currentPage === numberOfPages ? currentPage : currentPage + 1;
+    searchParams.set("page", nextPage);
+    setSearchParams(searchParams);
+  }
+
+  function handlePrevious() {
+    const prevPage = currentPage === 1 ? currentPage : currentPage - 1;
+
+    searchParams.set("page", prevPage);
+    setSearchParams(searchParams);
+  }
+
+  if (numberOfPages <= 1) return null;
+  return (
+    <StyledPagination>
+      <StyledParagraph>
+        <span>{(currentPage - 1) * PAGESIZE + 1} </span> to
+        <span>
+          {currentPage * PAGESIZE > numResults
+            ? numResults
+            : currentPage * PAGESIZE}
+        </span>
+        of <span> {numResults}</span>
+      </StyledParagraph>
+      <Buttons>
+        <PaginationButton onClick={handlePrevious}>
+          <HiChevronLeft /> <span>Previous</span>
+        </PaginationButton>
+        <PaginationButton onClick={handleNext}>
+          <HiChevronRight /> <span>Next</span>
+        </PaginationButton>
+      </Buttons>
+    </StyledPagination>
+  );
+}

@@ -36,26 +36,28 @@ const FilterButton = styled.button`
   }
 `;
 
-export default function Filter() {
+export default function Filter({ filterField, options = [] }) {
   const [searchParams, setSearchParams] = useSearchParams();
+  const currentSearchParam =
+    searchParams.get(filterField) || options.at(0)?.value;
+
   function handleClick(value) {
-    searchParams.set("searchVal", value);
+    searchParams.set(filterField, value);
     setSearchParams(searchParams);
   }
   return (
     <>
-      <Input
-        placeholder="Filter by Type/Number"
-        onChange={(e) => handleClick(e.target.value)}
-      />
       <StyledFilter>
-        <FilterButton onClick={() => handleClick("all")}>All</FilterButton>
-        <FilterButton onClick={() => handleClick("no-discount")}>
-          No Discount
-        </FilterButton>
-        <FilterButton onClick={() => handleClick("discount")}>
-          Discount
-        </FilterButton>
+        {options.map((option) => (
+          <FilterButton
+            key={option.label}
+            onClick={() => handleClick(option.value)}
+            active={currentSearchParam === option.value}
+            disabled={currentSearchParam === option.value}
+          >
+            {option.label}
+          </FilterButton>
+        ))}
       </StyledFilter>
     </>
   );

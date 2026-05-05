@@ -1,12 +1,21 @@
 import styled from "styled-components";
-import { format, isToday } from "date-fns";
+import { format } from "date-fns";
 
 import Tag from "../../ui/Tag";
 import Table from "../../ui/Table";
 
 import { formatCurrency } from "../../utils/helpers";
-import { formatDistanceFromNow } from "../../utils/helpers";
+import Menus from "../../ui/Menus";
+import { MdDelete } from "react-icons/md";
+import { useNavigate } from "react-router";
 
+const StyledBookingRow = styled.div`
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-grey-200);
+  }
+`;
 const Room = styled.div`
   font-size: 1.6rem;
   font-weight: 600;
@@ -40,46 +49,50 @@ function BookingRow({
     created_at,
     startDate,
     endDate,
-    numNights,
-    numGuests,
     totalPrice,
     status,
-    guests: { fullName: guestName, email },
-    rooms: { name: roomName },
+    rooms: { roomType, roomNumber },
+    guests: { surname, firstName, middleName, email },
   },
 }) {
+  const navigate = useNavigate();
+
   const statusToTagName = {
-    unconfirmed: "blue",
-    "checked-in": "green",
+    unconfirmed: "red",
+    confirmed: "primary",
     "checked-out": "silver",
   };
 
   return (
-    <Table.Row>
-      <Room>{roomName}</Room>
+    <StyledBookingRow onClick={() => navigate(`/bookings/${bookingId}`)}>
+      <Table.Row>
+        <Room>{String(roomNumber).padStart(3, "0")}</Room>
 
-      <Stacked>
-        <span>{guestName}</span>
-        <span>{email}</span>
-      </Stacked>
+        <Stacked>
+          <span>
+            {surname} {firstName} {middleName}
+          </span>
+          <span>{email}</span>
+        </Stacked>
 
-      <Stacked>
-        <span>
-          {isToday(new Date(startDate))
-            ? "Today"
-            : formatDistanceFromNow(startDate)}{" "}
-          &rarr; {numNights} night stay
-        </span>
-        <span>
-          {format(new Date(startDate), "MMM dd yyyy")} &mdash;{" "}
-          {format(new Date(endDate), "MMM dd yyyy")}
-        </span>
-      </Stacked>
+        <Stacked>
+          <span>from &mdash; to</span>
+          <span>
+            {format(new Date(startDate), "MMM dd yyyy")} &mdash;{" "}
+            {format(new Date(endDate), "MMM dd yyyy")}
+          </span>
+        </Stacked>
+        <Amount>{formatCurrency(totalPrice)}</Amount>
+        <Tag type={statusToTagName[status]}>{status?.replace("-", " ")}</Tag>
 
-      <Tag type={statusToTagName[status]}>{status.replace("-", " ")}</Tag>
-
-      <Amount>{formatCurrency(totalPrice)}</Amount>
-    </Table.Row>
+        <Menus.Menu>
+          <Menus.Toggle id={bookingId} />
+          <Menus.List id={bookingId}>
+            <Menus.Button icon={<MdDelete />}>Delete</Menus.Button>
+          </Menus.List>
+        </Menus.Menu>
+      </Table.Row>
+    </StyledBookingRow>
   );
 }
 
